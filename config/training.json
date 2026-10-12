@@ -1,21 +1,11 @@
 {
-  "_help": "Weekly Junior Warriors CRP training. Edit and run `npm run calendars`. Times are Melbourne local. A team's training is dropped automatically on days that team has tournament games. Add dates to skipDates (YYYY-MM-DD) to cancel training for everyone. Use alsoFor when other age groups share a session.",
-  "day": "Sunday",
-  "from": "2026-10-18",
-  "until": "2027-03-28",
-  "skipDates": [],
-  "venue": "Warragul Leisure Centre",
-  "address": "21 Burke Street, Warragul VIC 3820",
-  "sessions": [
-    { "group": "U10 Girls", "start": "08:30", "end": "10:00", "courts": "Court 3", "coach": "Dave Thomas" },
-    { "group": "U10 Boys", "start": "08:30", "end": "10:00", "courts": "Court 4", "coach": "Lachie Maddock" },
-    { "group": "U14 Girls", "start": "09:00", "end": "10:30", "courts": "Courts 1–2", "coach": "Shannon Padjic" },
-    { "group": "U12 Girls", "start": "10:00", "end": "11:30", "courts": "Courts 3–4", "coach": "Kody West Linnett" },
-    { "group": "U14 Boys", "start": "11:00", "end": "12:30", "courts": "Courts 1–2", "coach": "Chris Hartmann" },
-    { "group": "U12 Boys", "start": "11:30", "end": "13:00", "courts": "Courts 3–4", "coach": "Lee McDonald" },
-    { "group": "U16 Girls", "start": "12:30", "end": "14:00", "courts": "Courts 1–2", "coach": "Brent Hobba" },
-    { "group": "U18 Girls", "start": "13:00", "end": "14:00", "courts": "Court 3", "coach": "Bella McEwan" },
-    { "group": "U16 Boys", "start": "14:00", "end": "16:00", "courts": "Courts 3–4", "coach": "Heath Johnson" },
-    { "group": "U18 Boys", "alsoFor": ["U19 Boys"], "start": "16:00", "end": "17:30", "courts": "Courts 3–4", "coach": "Curtis Wheeler" }
-  ]
+  "_help": "Training sessions come from config/training-sessions.json (npm run import-bookings). This file holds the hand-maintained settings. A team's training is dropped automatically on days it has games.",
+  "aliases": {
+    "U19 Boys": "U18 Boys"
+  },
+  "includeClubBlocks": false,
+  "venues": {
+    "WARLC": { "name": "Warragul Leisure Centre", "address": "21 Burke Street, Warragul VIC 3820" },
+    "BPIC": { "name": "Bellbird Park Indoor Centre", "address": "270 Settlement Road, Drouin VIC 3818" }
+  }
 }

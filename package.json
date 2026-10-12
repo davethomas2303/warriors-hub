@@ -10,6 +10,7 @@
   "scripts": {
     "sync": "node scripts/sync.js",
     "calendars": "node scripts/calendars.js",
-    "build": "npm run sync && npm run calendars"
+    "build": "npm run sync && npm run calendars",
+    "import-bookings": "node scripts/import-bookings.js"
   }
 }

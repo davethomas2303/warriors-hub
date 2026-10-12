@@ -64,6 +64,7 @@ export function buildCalendar({ name, description, events }) {
     if (e.location) lines.push(`LOCATION:${escape(e.location)}`);
     if (e.description) lines.push(`DESCRIPTION:${escape(e.description)}`);
     if (e.url) lines.push(`URL:${e.url}`);
+    if (e.tentative) lines.push('STATUS:TENTATIVE');
     if (e.updated) lines.push(`LAST-MODIFIED:${stamp(e.updated)}`);
     if (e.alarmMinutes) {
       lines.push('BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${escape(e.summary)}`, `TRIGGER:-PT${e.alarmMinutes}M`, 'END:VALARM');

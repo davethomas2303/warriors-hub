@@ -1,0 +1,156 @@
+{
+  "importedAt": "2026-10-12T23:02:19.512Z",
+  "sourceExportedAt": "2026-10-12T22:56:06.164Z",
+  "sessions": [
+    {
+      "date": "2026-10-25",
+      "group": "U10 Boys",
+      "start": "08:30",
+      "end": "10:00",
+      "venue": "WARLC",
+      "courts": "Court 4",
+      "coach": "Lachie Maddock",
+      "status": "confirmed"
+    },
+    {
+      "date": "2026-10-25",
+      "group": "U10 Girls",
+      "start": "08:30",
+      "end": "10:00",
+      "venue": "WARLC",
+      "courts": "Court 3",
+      "coach": "Dave Thomas",
+      "status": "confirmed"
+    },
+    {
+      "date": "2026-10-25",
+      "group": "U14 Girls",
+      "start": "09:00",
+      "end": "10:30",
+      "venue": "WARLC",
+      "courts": "Courts 1–2",
+      "coach": "Shannon Padjic",
+      "status": "confirmed"
+    },
+    {
+      "date": "2026-10-25",
+      "group": "U12 Girls",
+      "start": "10:00",
+      "end": "11:30",
+      "venue": "WARLC",
+      "courts": "Courts 3–4",
+      "coach": "Kody West Linnett",
+      "status": "confirmed"
+    },
+    {
+      "date": "2026-10-25",
+      "group": "U14 Boys",
+      "start": "11:00",
+      "end": "12:30",
+      "venue": "WARLC",
+      "courts": "Courts 1–2",
+      "coach": "Chris Hartmann",
+      "status": "confirmed"
+    },
+    {
+      "date": "2026-10-25",
+      "group": "U12 Boys",
+      "start": "11:30",
+      "end": "13:00",
+      "venue": "WARLC",
+      "courts": "Courts 3–4",
+      "coach": "Lee McDonald",
+      "status": "confirmed"
+    },
+    {
+      "date": "2026-10-25",
+      "group": "U16 Girls",
+      "start": "12:30",
+      "end": "14:00",
+      "venue": "WARLC",
+      "courts": "Courts 1–2",
+      "coach": "Brent Hobba",
+      "status": "confirmed"
+    },
+    {
+      "date": "2026-10-25",
+      "group": "U18 Girls",
+      "start": "13:00",
+      "end": "14:00",
+      "venue": "WARLC",
+      "courts": "Court 3",
+      "coach": "Bella McEwan",
+      "status": "confirmed"
+    },
+    {
+      "date": "2026-10-25",
+      "group": "U16 Boys",
+      "start": "14:00",
+      "end": "16:00",
+      "venue": "WARLC",
+      "courts": "Courts 3–4",
+      "coach": "Heath Johnson",
+      "status": "confirmed"
+    },
+    {
+      "date": "2026-10-25",
+      "group": "U18 Boys",
+      "start": "16:00",
+      "end": "17:30",
+      "venue": "WARLC",
+      "courts": "Courts 3–4",
+      "coach": "Curtis Wheeler",
+      "status": "confirmed"
+    }
+  ],
+  "clubBlocks": [
+    {
+      "date": "2026-11-08",
+      "start": "09:00",
+      "end": "16:30",
+      "venue": "WARLC",
+      "courts": "Courts 1–4",
+      "status": "pending"
+    },
+    {
+      "date": "2026-11-15",
+      "start": "09:00",
+      "end": "16:30",
+      "venue": "WARLC",
+      "courts": "Courts 1–4",
+      "status": "pending"
+    },
+    {
+      "date": "2026-11-22",
+      "start": "09:00",
+      "end": "16:30",
+      "venue": "WARLC",
+      "courts": "Courts 1–4",
+      "status": "pending"
+    },
+    {
+      "date": "2026-11-29",
+      "start": "08:30",
+      "end": "16:30",
+      "venue": "WARLC",
+      "courts": "Courts 1–4",
+      "status": "pending"
+    },
+    {
+      "date": "2026-12-06",
+      "start": "09:00",
+      "end": "16:30",
+      "venue": "WARLC",
+      "courts": "Courts 1–4",
+      "status": "pending"
+    },
+    {
+      "date": "2026-12-13",
+      "start": "09:00",
+      "end": "16:30",
+      "venue": "WARLC",
+      "courts": "Courts 1–4",
+      "status": "pending"
+    }
+  ]
+}

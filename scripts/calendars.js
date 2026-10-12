@@ -1,5 +1,6 @@
-// Builds one subscribable .ics calendar per junior team: PlayHQ games + weekly training.
-// Training is dropped on days the team has games. Reads data/fixtures.json (npm run sync).
+// Builds one subscribable .ics calendar per junior team: PlayHQ games + CRP training sessions.
+// Training is dropped on days the team has games. Reads data/fixtures.json (npm run sync) and
+// config/training-sessions.json (npm run import-bookings).
 //
 //   npm run calendars   ->  public/calendars/<team>.ics  +  public/calendars/index.json
 
@@ -12,7 +13,6 @@ const OUT_DIR = new URL('public/calendars/', ROOT);
 const GAME_MINUTES = 60;
 const GAME_ALARM = 60; // reminder before tip-off
 const TRAINING_ALARM = 30;
-const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 const readJson = async (path) => JSON.parse(await readFile(new URL(path, ROOT), 'utf8'));
 
@@ -25,12 +25,9 @@ function parseTeam(name) {
 
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-function* sundaysBetween(fromStr, untilStr, dayName) {
-  const dow = DAYS.indexOf(dayName);
-  const d = new Date(`${fromStr}T00:00:00Z`);
-  const until = new Date(`${untilStr}T00:00:00Z`);
-  while (d.getUTCDay() !== dow) d.setUTCDate(d.getUTCDate() + 1);
-  for (; d <= until; d.setUTCDate(d.getUTCDate() + 7)) yield d.toISOString().slice(0, 10);
+function venueText(code, courts, venues) {
+  const v = venues[code];
+  return v ? `${v.name} – ${courts}, ${v.address}` : `${code} – ${courts}`;
 }
 
 function gameEvent(g, short) {
@@ -51,23 +48,37 @@ function gameEvent(g, short) {
   };
 }
 
-function trainingEvent(session, date, cfg, short) {
+function trainingEvent(s, short, venues) {
+  const pending = s.status === 'pending';
   return {
-    uid: `training-${slug(session.group)}-${date}@warriors-hub`,
-    start: melbourneToUtc(date, session.start),
-    end: melbourneToUtc(date, session.end),
-    summary: `🏋️ ${short} training`,
-    location: `${cfg.venue} – ${session.courts}, ${cfg.address}`,
-    description: `Junior Warriors CRP – ${session.group}\nCoach: ${session.coach}`,
+    uid: `training-${slug(s.group)}-${s.date}@warriors-hub`,
+    start: melbourneToUtc(s.date, s.start),
+    end: melbourneToUtc(s.date, s.end),
+    summary: `🏋️ ${short} training${pending ? ' (TBC)' : ''}`,
+    location: venueText(s.venue, s.courts, venues),
+    description: [`Junior Warriors CRP – ${s.group}`, s.coach && `Coach: ${s.coach}`, pending && 'Booking not yet confirmed.']
+      .filter(Boolean).join('\n'),
+    tentative: pending,
     alarmMinutes: TRAINING_ALARM,
+  };
+}
+
+function clubBlockEvent(b, venues) {
+  return {
+    uid: `club-training-${b.date}-${slug(b.venue)}@warriors-hub`,
+    start: melbourneToUtc(b.date, b.start),
+    end: melbourneToUtc(b.date, b.end),
+    summary: '🏋️ CRP club training – your session time TBC',
+    location: venueText(b.venue, b.courts, venues),
+    description: 'Courts booked for CRP training. Your team’s time will be confirmed by your coach.',
+    tentative: true,
   };
 }
 
 async function main() {
   const { games, syncedAt } = await readJson('data/fixtures.json');
   const training = await readJson('config/training.json');
-  const sessionsByGroup = new Map(training.sessions.flatMap((s) => [s.group, ...(s.alsoFor ?? [])].map((g) => [g, s])));
-  const skip = new Set(training.skipDates);
+  const { sessions, clubBlocks } = await readJson('config/training-sessions.json');
 
   // Group games by team.
   const teams = new Map();
@@ -81,21 +92,21 @@ async function main() {
 
   const index = [];
   const noTraining = [];
-  for (const [name, team] of [...teams].sort(([a], [b]) => a.localeCompare(b, 'en', { numeric: true }))) {
+  for (const [, team] of [...teams].sort(([a], [b]) => a.localeCompare(b, 'en', { numeric: true }))) {
     const events = team.games.map((g) => gameEvent(g, team.short));
     const gameDays = new Set(team.games.map((g) => g.date));
 
-    const session = sessionsByGroup.get(team.group);
+    const group = training.aliases?.[team.group] ?? team.group;
+    const ours = sessions.filter((s) => s.group === group);
     const cancelled = [];
-    if (session) {
-      for (const date of sundaysBetween(training.from, training.until, training.day)) {
-        if (skip.has(date)) continue;
-        if (gameDays.has(date)) { cancelled.push(date); continue; }
-        events.push(trainingEvent(session, date, training, team.short));
-      }
-    } else {
-      noTraining.push(team.short);
+    for (const s of ours) {
+      if (gameDays.has(s.date)) { cancelled.push(s.date); continue; }
+      events.push(trainingEvent(s, team.short, training.venues));
     }
+    if (training.includeClubBlocks) {
+      for (const b of clubBlocks) if (!gameDays.has(b.date)) events.push(clubBlockEvent(b, training.venues));
+    }
+    if (ours.length === 0) noTraining.push(team.short);
 
     const file = `warriors-${slug(team.short)}.ics`;
     await writeFile(
@@ -106,7 +117,7 @@ async function main() {
         events: events.sort((a, b) => a.start - b.start),
       })
     );
-    index.push({ team: team.short, group: team.group, file, games: team.games.length, trainingCancelled: cancelled });
+    index.push({ team: team.short, group: team.group, file, games: team.games.length, training: ours.length - cancelled.length, trainingCancelled: cancelled });
   }
 
   await writeFile(new URL('index.json', OUT_DIR), JSON.stringify({ builtAt: new Date().toISOString(), fixturesSyncedAt: syncedAt, calendars: index }, null, 2));
@@ -115,9 +126,9 @@ async function main() {
   console.log(`Built ${index.length} team calendars in public/calendars/\n`);
   for (const c of index) {
     const note = c.trainingCancelled.length ? `  (training off: ${c.trainingCancelled.join(', ')})` : '';
-    console.log(`  ${c.team.padEnd(14)} ${String(c.games).padStart(2)} games${note}`);
+    console.log(`  ${c.team.padEnd(14)} ${String(c.games).padStart(2)} games, ${c.training} training${note}`);
   }
-  if (noTraining.length) console.log(`\n⚠ No training session in config/training.json for: ${noTraining.join(', ')}`);
+  if (noTraining.length) console.log(`\n⚠ No upcoming training in config/training-sessions.json for: ${noTraining.join(', ')}`);
 }
 
 main().catch((err) => {
