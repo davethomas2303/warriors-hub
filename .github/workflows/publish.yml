@@ -1,0 +1,47 @@
+name: Sync PlayHQ & publish calendars
+
+on:
+  schedule:
+    - cron: '17 * * * *' # hourly (GitHub may delay scheduled runs a little)
+  workflow_dispatch: # "Run workflow" button in the Actions tab
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Sync fixtures and build calendars
+        env:
+          PLAYHQ_API_KEY: ${{ secrets.PLAYHQ_API_KEY }}
+          PLAYHQ_ORG_ID: da5ac2e4-ac38-5a8e-89e4-56c3de2213ff
+          PLAYHQ_CLUB_ID: 6c75cb90-0b38-4b04-a1ca-27044a0ef4b5
+          PLAYHQ_TENANT: bv
+        run: npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

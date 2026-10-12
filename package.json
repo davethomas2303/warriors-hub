@@ -1,0 +1,15 @@
+{
+  "name": "warriors-hub",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Warragul Warriors fixtures, training and notices hub built on PlayHQ",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "sync": "node scripts/sync.js",
+    "calendars": "node scripts/calendars.js",
+    "build": "npm run sync && npm run calendars"
+  }
+}
