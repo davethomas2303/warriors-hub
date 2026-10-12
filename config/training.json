@@ -4,6 +4,10 @@
     "U19 Boys": "U18 Boys"
   },
   "includeClubBlocks": false,
+  "coachNames": {
+    "Shannon Padjic": "Shannon Pajdic",
+    "Shannon Patterson": "Shannon Pajdic"
+  },
   "venues": {
     "WARLC": { "name": "Warragul Leisure Centre", "address": "21 Burke Street, Warragul VIC 3820" },
     "BPIC": { "name": "Bellbird Park Indoor Centre", "address": "270 Settlement Road, Drouin VIC 3818" }

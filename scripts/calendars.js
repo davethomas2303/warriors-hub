@@ -48,15 +48,16 @@ function gameEvent(g, short) {
   };
 }
 
-function trainingEvent(s, short, venues) {
+function trainingEvent(s, short, { venues, coachNames = {} }) {
   const pending = s.status === 'pending';
+  const coach = coachNames[s.coach] ?? s.coach;
   return {
     uid: `training-${slug(s.group)}-${s.date}@warriors-hub`,
     start: melbourneToUtc(s.date, s.start),
     end: melbourneToUtc(s.date, s.end),
     summary: `🏋️ ${short} training${pending ? ' (TBC)' : ''}`,
     location: venueText(s.venue, s.courts, venues),
-    description: [`Junior Warriors CRP – ${s.group}`, s.coach && `Coach: ${s.coach}`, pending && 'Booking not yet confirmed.']
+    description: [`Junior Warriors CRP – ${s.group}`, coach && `Coach: ${coach}`, pending && 'Booking not yet confirmed.']
       .filter(Boolean).join('\n'),
     tentative: pending,
     alarmMinutes: TRAINING_ALARM,
@@ -101,7 +102,7 @@ async function main() {
     const cancelled = [];
     for (const s of ours) {
       if (gameDays.has(s.date)) { cancelled.push(s.date); continue; }
-      events.push(trainingEvent(s, team.short, training.venues));
+      events.push(trainingEvent(s, team.short, training));
     }
     if (training.includeClubBlocks) {
       for (const b of clubBlocks) if (!gameDays.has(b.date)) events.push(clubBlockEvent(b, training.venues));
