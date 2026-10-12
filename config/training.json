@@ -1,5 +1,5 @@
 {
-  "_help": "Weekly Junior Warriors CRP training. Edit and run `npm run calendars`. Times are Melbourne local. A team's training is dropped automatically on days that team has tournament games. Add dates to skipDates (YYYY-MM-DD) to cancel training for everyone.",
+  "_help": "Weekly Junior Warriors CRP training. Edit and run `npm run calendars`. Times are Melbourne local. A team's training is dropped automatically on days that team has tournament games. Add dates to skipDates (YYYY-MM-DD) to cancel training for everyone. Use alsoFor when other age groups share a session.",
   "day": "Sunday",
   "from": "2026-10-18",
   "until": "2027-03-28",
@@ -16,6 +16,6 @@
     { "group": "U16 Girls", "start": "12:30", "end": "14:00", "courts": "Courts 1–2", "coach": "Brent Hobba" },
     { "group": "U18 Girls", "start": "13:00", "end": "14:00", "courts": "Court 3", "coach": "Bella McEwan" },
     { "group": "U16 Boys", "start": "14:00", "end": "16:00", "courts": "Courts 3–4", "coach": "Heath Johnson" },
-    { "group": "U18 Boys", "start": "16:00", "end": "17:30", "courts": "Courts 3–4", "coach": "Curtis Wheeler" }
+    { "group": "U18 Boys", "alsoFor": ["U19 Boys"], "start": "16:00", "end": "17:30", "courts": "Courts 3–4", "coach": "Curtis Wheeler" }
   ]
 }

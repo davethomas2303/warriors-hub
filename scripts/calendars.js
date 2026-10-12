@@ -66,7 +66,7 @@ function trainingEvent(session, date, cfg, short) {
 async function main() {
   const { games, syncedAt } = await readJson('data/fixtures.json');
   const training = await readJson('config/training.json');
-  const sessionsByGroup = new Map(training.sessions.map((s) => [s.group, s]));
+  const sessionsByGroup = new Map(training.sessions.flatMap((s) => [s.group, ...(s.alsoFor ?? [])].map((g) => [g, s])));
   const skip = new Set(training.skipDates);
 
   // Group games by team.
