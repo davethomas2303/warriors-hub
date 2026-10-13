@@ -42,13 +42,25 @@ export function renderIndex({ calendars, builtAt }) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Warriors Calendars</title>
+<meta name="description" content="Warragul Warriors junior rep games and training, straight into your calendar.">
+<meta name="theme-color" content="#111111">
+<link rel="icon" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<meta property="og:title" content="Warragul Warriors calendars">
+<meta property="og:description" content="Games from PlayHQ and CRP training for every junior rep team. Subscribe once, stays up to date.">
+<meta property="og:image" content="logo.png">
 <style>
   :root { --bg:#f6f5f2; --card:#fff; --ink:#151515; --muted:#666; --line:#e4e1da; --accent:#c8102e; --accent-ink:#fff; }
   @media (prefers-color-scheme: dark) { :root { --bg:#121212; --card:#1d1d1d; --ink:#f1f1f1; --muted:#a0a0a0; --line:#2e2e2e; --accent:#e0303f; } }
   * { box-sizing: border-box; }
   body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
-  main { max-width:720px; margin:0 auto; padding:24px 16px 48px; }
-  h1 { font-size:1.6rem; margin:0 0 4px; }
+  .brand { background:#111; color:#fff; border-bottom:4px solid var(--accent); }
+  .brand-inner { max-width:720px; margin:0 auto; padding:16px; display:flex; align-items:center; gap:14px; }
+  .brand img { width:64px; height:64px; flex:none; }
+  .brand .club { font-size:.8rem; text-transform:uppercase; letter-spacing:.12em; color:#d9d9d9; }
+  .brand h1 { color:#fff; }
+  main { max-width:720px; margin:0 auto; padding:20px 16px 48px; }
+  h1 { font-size:1.5rem; margin:0; line-height:1.2; }
   .lead { color:var(--muted); margin:0 0 20px; }
   .how { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 16px; margin-bottom:24px; font-size:.95rem; }
   .how ul { margin:6px 0 0; padding-left:20px; }
@@ -63,9 +75,17 @@ export function renderIndex({ calendars, builtAt }) {
 </style>
 </head>
 <body>
+<header class="brand">
+  <div class="brand-inner">
+    <img src="logo.png" alt="Warragul Warriors Basketball">
+    <div>
+      <div class="club">Warragul Warriors Basketball</div>
+      <h1>Junior rep calendars</h1>
+    </div>
+  </div>
+</header>
 <main>
-  <h1>Warragul Warriors calendars</h1>
-  <p class="lead">Games from PlayHQ plus Sunday training, for each junior rep team. Subscribe once and it keeps itself up to date.</p>
+  <p class="lead">Games from PlayHQ plus CRP training, for each junior rep team. Subscribe once and it keeps itself up to date.</p>
   <div class="how">
     <strong>How to add</strong>
     <ul>

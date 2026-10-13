@@ -49,6 +49,8 @@ export function buildCalendar({ name, description, events }) {
     `X-WR-CALNAME:${escape(name)}`,
     `X-WR-CALDESC:${escape(description)}`,
     `X-WR-TIMEZONE:${TZ}`,
+    'X-APPLE-CALENDAR-COLOR:#C8102E', // Warriors red on Apple devices
+    'COLOR:crimson', // RFC 7986, used by some other calendar apps
     'REFRESH-INTERVAL;VALUE=DURATION:PT1H',
     'X-PUBLISHED-TTL:PT1H',
   ];

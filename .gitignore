@@ -1,4 +1,5 @@
 .env
 data/
 public/
+private/
 node_modules/

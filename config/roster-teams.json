@@ -1,0 +1,8 @@
+{
+  "_help": "Maps team labels from the CRP squad list to tournament team names, where the label's number doesn't match. Anything not listed is read from the label (e.g. 'U14 Girls 14.2' -> 'U14 Girls 2'). Labels containing 'Shadow' are training-only players: they get their age group's training but no games.",
+  "teams": {
+    "U10 Boys 10.1 · A Grade": "U10 Boys 1",
+    "U10 Boys 10.1 · B Grade": "U10 Boys 2",
+    "U18/19 Boys 18.2": "U19 Boys 1"
+  }
+}

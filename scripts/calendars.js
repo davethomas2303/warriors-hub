@@ -4,77 +4,15 @@
 //
 //   npm run calendars   ->  public/calendars/<team>.ics  +  public/calendars/index.json
 
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
-import { buildCalendar, melbourneToUtc } from '../src/ics.js';
+import { copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { buildCalendar } from '../src/ics.js';
+import { clubBlockEvent, gameEvent, parseTeam, sessionsFor, slug, trainingEvent } from '../src/events.js';
 import { renderIndex } from '../src/page.js';
 
 const ROOT = new URL('../', import.meta.url);
 const OUT_DIR = new URL('public/calendars/', ROOT);
-const GAME_MINUTES = 60;
-const GAME_ALARM = 60; // reminder before tip-off
-const TRAINING_ALARM = 30;
 
 const readJson = async (path) => JSON.parse(await readFile(new URL(path, ROOT), 'utf8'));
-
-// "Warragul Warriors U14 Girls 2" -> { group: "U14 Girls", short: "U14 Girls 2" }
-function parseTeam(name) {
-  const short = name.replace(/^Warragul Warriors\s+/i, '').trim();
-  const m = short.match(/\b(U\d{1,2})\s+(Boys|Girls)\b/i);
-  return { short, group: m ? `${m[1].toUpperCase()} ${m[2][0].toUpperCase()}${m[2].slice(1).toLowerCase()}` : null };
-}
-
-const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-
-function venueText(code, courts, venues) {
-  const v = venues[code];
-  return v ? `${v.name} – ${courts}, ${v.address}` : `${code} – ${courts}`;
-}
-
-function gameEvent(g, short) {
-  const start = melbourneToUtc(g.date, g.time);
-  const where = [g.venue, g.court].filter(Boolean).join(' – ');
-  const addr = g.address ? `${g.address.line1}, ${g.address.suburb} ${g.address.state} ${g.address.postcode}` : '';
-  return {
-    uid: `game-${g.id}-${g.teamId}@warriors-hub`,
-    start,
-    end: new Date(start.getTime() + GAME_MINUTES * 60_000),
-    summary: `🏀 ${short} v ${g.opponent}`,
-    location: [where, addr].filter(Boolean).join(', '),
-    description: [`${g.competition} – ${g.round ?? ''}`.trim(), g.grade && `Grade: ${g.grade}`, g.url && `Game centre: ${g.url}`]
-      .filter(Boolean).join('\n'),
-    url: g.url,
-    updated: g.updatedAt ? new Date(g.updatedAt) : undefined,
-    alarmMinutes: GAME_ALARM,
-  };
-}
-
-function trainingEvent(s, short, { venues, coachNames = {} }) {
-  const pending = s.status === 'pending';
-  const coach = coachNames[s.coach] ?? s.coach;
-  return {
-    uid: `training-${slug(s.group)}-${s.date}@warriors-hub`,
-    start: melbourneToUtc(s.date, s.start),
-    end: melbourneToUtc(s.date, s.end),
-    summary: `🏋️ ${short} training${pending ? ' (TBC)' : ''}`,
-    location: venueText(s.venue, s.courts, venues),
-    description: [`Junior Warriors CRP – ${s.group}`, coach && `Coach: ${coach}`, pending && 'Booking not yet confirmed.']
-      .filter(Boolean).join('\n'),
-    tentative: pending,
-    alarmMinutes: TRAINING_ALARM,
-  };
-}
-
-function clubBlockEvent(b, venues) {
-  return {
-    uid: `club-training-${b.date}-${slug(b.venue)}@warriors-hub`,
-    start: melbourneToUtc(b.date, b.start),
-    end: melbourneToUtc(b.date, b.end),
-    summary: '🏋️ CRP club training – your session time TBC',
-    location: venueText(b.venue, b.courts, venues),
-    description: 'Courts booked for CRP training. Your team’s time will be confirmed by your coach.',
-    tentative: true,
-  };
-}
 
 async function main() {
   const { games, syncedAt } = await readJson('data/fixtures.json');
@@ -97,8 +35,7 @@ async function main() {
     const events = team.games.map((g) => gameEvent(g, team.short));
     const gameDays = new Set(team.games.map((g) => g.date));
 
-    const group = training.aliases?.[team.group] ?? team.group;
-    const ours = sessions.filter((s) => s.group === group);
+    const ours = sessionsFor(team.group, sessions, training);
     const cancelled = [];
     for (const s of ours) {
       if (gameDays.has(s.date)) { cancelled.push(s.date); continue; }
@@ -123,6 +60,7 @@ async function main() {
 
   await writeFile(new URL('index.json', OUT_DIR), JSON.stringify({ builtAt: new Date().toISOString(), fixturesSyncedAt: syncedAt, calendars: index }, null, 2));
   await writeFile(new URL('public/index.html', ROOT), renderIndex({ calendars: index, builtAt: syncedAt }));
+  await copyFile(new URL('assets/logo.png', ROOT), new URL('public/logo.png', ROOT));
 
   console.log(`Built ${index.length} team calendars in public/calendars/\n`);
   for (const c of index) {

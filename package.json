@@ -11,6 +11,8 @@
     "sync": "node scripts/sync.js",
     "calendars": "node scripts/calendars.js",
     "build": "npm run sync && npm run calendars",
-    "import-bookings": "node scripts/import-bookings.js"
+    "import-bookings": "node scripts/import-bookings.js",
+    "import-roster": "node scripts/import-roster.js",
+    "players": "node scripts/players.js"
   }
 }
