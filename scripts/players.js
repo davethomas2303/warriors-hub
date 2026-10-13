@@ -15,7 +15,7 @@ import { gameEvent, parseTeam, sessionsFor, trainingEvent } from '../src/events.
 
 const ROOT = new URL('../', import.meta.url);
 const OUT_DIR = new URL('public/my/', ROOT);
-const SITE_URL = process.env.SITE_URL ?? 'https://davethomas2303.github.io/warriors-hub/';
+const SITE_URL = process.env.SITE_URL ?? 'https://warriors.stagingweb.com.au/';
 
 const readJson = async (path, fallback) => {
   try {
